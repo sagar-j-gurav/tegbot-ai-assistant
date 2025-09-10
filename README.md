@@ -1,6 +1,6 @@
 # TEGBot AI Assistant
 
-A modern, interactive AI chat interface built with React.js featuring a sleek design with dark/light theme support, brand colors, and customizable background imagery.
+A modern, interactive AI chat interface built with React.js featuring a sleek design with dark/light theme support, brand colors, and customizable chat background.
 
 ![TEGBot Interface](https://img.shields.io/badge/TEGBot-AI%20Assistant-E11E26)
 
@@ -9,7 +9,7 @@ A modern, interactive AI chat interface built with React.js featuring a sleek de
 - 🤖 **Modern Chat Interface** - Clean and intuitive design with message alignment (bot left, user right)
 - 🌓 **Dark/Light Theme Toggle** - Switch between dark and light modes for comfortable viewing
 - 🎨 **Brand Colors** - Integrated with #E11E26 (primary red) and #f8f8f9 (light gray)
-- 🖼️ **Background Image Support** - Add your business background image for branding
+- 🖼️ **Chat Background Image** - Add your business background image to the chat area
 - 💬 **Real-time Messaging** - Instant message sending and receiving
 - ⌨️ **Typing Indicators** - Visual feedback when TEGBot is processing
 - 📱 **Responsive Design** - Works seamlessly on desktop and mobile
@@ -17,6 +17,7 @@ A modern, interactive AI chat interface built with React.js featuring a sleek de
 - 🔄 **New Chat Option** - Start fresh conversations easily
 - ⏰ **Message Timestamps** - Track conversation history
 - 🎯 **Smart Message Layout** - Bot messages on left, user messages on right
+- 🔍 **Glass-morphism Effects** - Modern blur effects on message bubbles
 
 ## 🎨 Brand Integration
 
@@ -26,32 +27,39 @@ A modern, interactive AI chat interface built with React.js featuring a sleek de
 - Enhanced visual hierarchy with brand colors
 - Consistent color usage across both themes
 
-### Background Image Setup
-The application supports a custom background image to reinforce your brand identity.
+### Chat Background Image
+The application supports a custom background image in the chat messages area for a branded conversation experience.
 
-#### To add your background image:
+#### To add your chat background:
 
 1. **Add your image to the public folder:**
-   - Place your background image in the `public` folder
-   - Name it `background.jpg` (or update the CSS with your filename)
+   ```bash
+   # Place your background image in the public folder
+   cp your-background.jpg public/chat-background.jpg
+   ```
+   - Name it `chat-background.jpg`
    - Recommended size: 1920x1080 or higher for best quality
+   - Supported formats: .jpg, .jpeg, .png, .webp
 
-2. **Optional: Add a chat pattern texture:**
-   - Add a subtle pattern image to `public/chat-pattern.png`
-   - This will overlay on the messages area for texture
+2. **The background will automatically:**
+   - Display behind the chat messages
+   - Have an intelligent overlay for message readability
+   - Adapt to dark/light theme changes
+   - Scroll with the messages for a seamless experience
 
-3. **Update the CSS if using different filenames:**
+3. **If using a different filename:**
    ```css
-   /* In src/App.css, update the background-image URL */
-   .app::before {
-     background-image: url('/your-background-image.jpg');
+   /* In src/App.css, update line 226 */
+   .messages-container::before {
+     background-image: url('/your-custom-name.jpg');
    }
    ```
 
 ### Visual Features
-- **Glass-morphism effects** with backdrop filters
-- **Gradient overlays** for better text readability
-- **Dynamic shadows** using brand colors
+- **Chat-specific background** - Background image only in messages area
+- **Glass-morphism message bubbles** - Semi-transparent with backdrop blur
+- **Dynamic overlays** - Automatic adjustment for readability
+- **Theme-adaptive overlays** - Different opacity for dark/light modes
 - **Smooth transitions** between themes
 
 ## 📋 Prerequisites
@@ -60,7 +68,7 @@ Before running this application, ensure you have:
 
 1. **Node.js** (v14 or higher) and npm installed
 2. **Backend API** running on `http://localhost:8000` with the `/api/query` endpoint
-3. **Background image** (optional) for brand customization
+3. **Chat background image** (optional) for brand customization
 
 ## 🚀 Installation
 
@@ -75,10 +83,10 @@ cd tegbot-ai-assistant
 npm install
 ```
 
-3. Add your background image (optional):
+3. Add your chat background image (optional):
 ```bash
 # Copy your background image to the public folder
-cp /path/to/your/background.jpg public/background.jpg
+cp /path/to/your/background.jpg public/chat-background.jpg
 ```
 
 4. Start the development server:
@@ -114,17 +122,16 @@ Ensure your backend API is running with the following endpoint:
 ```
 tegbot-ai-assistant/
 ├── public/
-│   ├── index.html          # HTML template
-│   ├── background.jpg      # Your brand background image (add this)
-│   └── chat-pattern.png    # Optional texture overlay (add this)
+│   ├── index.html              # HTML template
+│   └── chat-background.jpg     # Your chat background image (add this)
 ├── src/
-│   ├── App.js             # Main chat component with theme logic
-│   ├── App.css            # Styling with brand colors and background
-│   ├── index.js           # Application entry point
-│   └── index.css          # Global styles
-├── package.json           # Dependencies and scripts
-├── .gitignore            # Git ignore rules
-└── README.md             # Documentation
+│   ├── App.js                  # Main chat component with theme logic
+│   ├── App.css                 # Styling with chat background support
+│   ├── index.js                # Application entry point
+│   └── index.css               # Global styles
+├── package.json                # Dependencies and scripts
+├── .gitignore                  # Git ignore rules
+└── README.md                   # Documentation
 ```
 
 ## 🛠️ Technologies Used
@@ -136,55 +143,80 @@ tegbot-ai-assistant/
 
 ## 🎯 Features in Detail
 
-### Brand Integration
-- **Color Usage**: #E11E26 for primary actions and accents, #f8f8f9 for light backgrounds
-- **Background Image**: Full-screen background with intelligent overlays
-- **Glass Effects**: Modern glassmorphism for a premium feel
-- **Dynamic Theming**: Colors adapt beautifully in both dark and light modes
+### Chat Background
+- **Localized to chat area** - Background only appears in the messages container
+- **Smart overlays** - Automatic overlay adjustment for text readability
+- **Theme responsive** - Different overlay opacity for dark (88%) and light (92%) modes
+- **Backdrop blur** - Message bubbles have glass effect for better visibility
+- **Z-index layering** - Messages appear above background with proper stacking
 
-### Chat Interface
-- Clean, modern design with brand colors
-- Message bubbles with distinct left/right alignment
-- Bot messages appear on the left with subtle brand coloring
-- User messages appear on the right with primary brand color
-- Smooth scrolling and animations
-- Markdown support for formatted responses
+### Message Styling
+- **Glass-morphism effect** - Semi-transparent message bubbles with backdrop blur
+- **Brand colors** - User messages in #E11E26, bot messages adapt to theme
+- **Enhanced shadows** - Subtle shadows for depth perception
+- **Smooth animations** - Fade-in effect for new messages
 
 ### Theme System
-- Toggle between dark and light modes
-- Brand colors integrated in both themes
-- Background image adapts to theme with overlays
-- Smooth transitions between themes
+- **Dark Mode**:
+  - Dark overlay (85-90% opacity) over chat background
+  - Bot messages: Dark gray with light text
+  - Enhanced contrast for readability
+
+- **Light Mode**:
+  - Light overlay (88-92% opacity) over chat background
+  - Bot messages: Light gray (#f8f8f9) with dark text
+  - Softer shadows and colors
 
 ## 🎨 Customization Guide
 
-### 1. Background Image
+### 1. Chat Background Image
 ```css
 /* Update in src/App.css */
-.app::before {
-  background-image: url('/your-custom-background.jpg');
+.messages-container::before {
+  background-image: url('/chat-background.jpg');
+  /* Adjust background properties as needed */
+  background-size: cover;  /* or 'contain', '100% 100%' */
+  background-position: center;  /* or 'top', 'bottom' */
 }
 ```
 
-### 2. Brand Colors
+### 2. Overlay Opacity
+Adjust the overlay darkness/lightness for better readability:
 ```css
-/* Update the root variables in src/App.css */
-:root {
-  --brand-primary: #E11E26;    /* Your primary color */
-  --brand-secondary: #f8f8f9;  /* Your secondary color */
+/* Dark theme overlay */
+.dark-theme .messages-container::after {
+  background: rgba(15, 15, 15, 0.88);  /* Adjust last value (0-1) */
+}
+
+/* Light theme overlay */
+.light-theme .messages-container::after {
+  background: rgba(248, 248, 249, 0.92);  /* Adjust last value (0-1) */
 }
 ```
 
-### 3. Chat Bubble Colors
-- User messages use the primary brand color (#E11E26)
-- Bot messages use the secondary color (#f8f8f9) in light mode
-- All colors are optimized for readability
+### 3. Message Bubble Transparency
+```css
+.message.bot .message-text {
+  background: rgba(44, 44, 44, 0.95);  /* Adjust opacity */
+  backdrop-filter: blur(20px);  /* Adjust blur amount */
+}
+```
 
-### 4. Additional Customization
-- Modify overlay opacity for background image visibility
-- Adjust blur effects for glassmorphism
-- Change gradient directions and colors
-- Update shadow colors to match your brand
+## 🖼️ Background Image Tips
+
+1. **Image Selection**:
+   - Choose images with moderate contrast
+   - Avoid busy patterns that might interfere with text
+   - Consider abstract or blurred backgrounds
+
+2. **Optimization**:
+   - Compress images for web (use tools like TinyPNG)
+   - Recommended format: JPEG for photos, PNG for graphics
+   - Keep file size under 500KB for best performance
+
+3. **Fallback**:
+   - If no image is provided, the chat area uses theme colors
+   - Ensures good experience even without custom background
 
 ## 📦 Building for Production
 
@@ -204,16 +236,16 @@ The production build can be deployed to:
 - GitHub Pages
 - Any static hosting service
 
-**Note**: Remember to include your background images in the deployment.
+**Note**: Remember to include your chat background image in the deployment.
 
 ## 🔄 Recent Updates
 
-- ✅ Integrated brand colors #E11E26 and #f8f8f9 throughout the interface
-- ✅ Added background image support with intelligent overlays
-- ✅ Enhanced visual design with glassmorphism effects
-- ✅ Improved color consistency across themes
-- ✅ Added gradient overlays for better readability
-- ✅ Implemented dynamic shadows using brand colors
+- ✅ Chat-specific background image (not full app background)
+- ✅ Glass-morphism effect on message bubbles
+- ✅ Intelligent overlays for readability
+- ✅ Theme-adaptive background overlays
+- ✅ Enhanced message styling with backdrop blur
+- ✅ Z-index layering for proper element stacking
 
 ## 🤝 Contributing
 
