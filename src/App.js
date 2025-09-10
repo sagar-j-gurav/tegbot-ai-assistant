@@ -15,8 +15,14 @@ function App() {
   const [inputMessage, setInputMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    // Apply theme class to body
+    document.body.className = isDarkMode ? 'dark-theme' : 'light-theme';
+  }, [isDarkMode]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -110,6 +116,10 @@ function App() {
     inputRef.current?.focus();
   };
 
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
     <div className="app">
       <div className="chat-container">
@@ -118,9 +128,9 @@ function App() {
             <div className="logo-section">
               <div className="bot-avatar">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M2 17L12 22L22 17" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  <path d="M2 12L12 17L22 12" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
               <div className="bot-info">
@@ -131,20 +141,68 @@ function App() {
                 </span>
               </div>
             </div>
-            <button className="new-chat-btn" onClick={handleNewChat}>
-              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              New Chat
-            </button>
+            <div className="header-actions">
+              <button className="theme-toggle" onClick={toggleTheme}>
+                {isDarkMode ? (
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="5" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                )}
+              </button>
+              <button className="new-chat-btn" onClick={handleNewChat}>
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                <span>New Chat</span>
+              </button>
+            </div>
           </div>
         </header>
 
         <div className="messages-container">
           {messages.map((message) => (
-            <div key={message.id} className={`message ${message.type} ${message.isError ? 'error' : ''}`}>
-              <div className="message-avatar">
-                {message.type === 'bot' ? (
+            <div key={message.id} className={`message-row ${message.type}`}>
+              <div className={`message ${message.type} ${message.isError ? 'error' : ''}`}>
+                <div className="message-avatar">
+                  {message.type === 'bot' ? (
+                    <div className="bot-icon">
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="1.5"/>
+                        <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="1.5"/>
+                        <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="1.5"/>
+                      </svg>
+                    </div>
+                  ) : (
+                    <div className="user-icon">
+                      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                <div className="message-bubble">
+                  <div className="message-header">
+                    <span className="message-sender">{message.type === 'bot' ? 'TEGBot' : 'You'}</span>
+                    <span className="message-time">{formatTime(message.timestamp)}</span>
+                  </div>
+                  <div className="message-text">
+                    <ReactMarkdown>{message.content}</ReactMarkdown>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+          
+          {isTyping && (
+            <div className="message-row bot">
+              <div className="message bot">
+                <div className="message-avatar">
                   <div className="bot-icon">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="1.5"/>
@@ -152,46 +210,16 @@ function App() {
                       <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="1.5"/>
                     </svg>
                   </div>
-                ) : (
-                  <div className="user-icon">
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                </div>
+                <div className="message-bubble">
+                  <div className="message-header">
+                    <span className="message-sender">TEGBot</span>
                   </div>
-                )}
-              </div>
-              <div className="message-content">
-                <div className="message-header">
-                  <span className="message-sender">{message.type === 'bot' ? 'TEGBot' : 'You'}</span>
-                  <span className="message-time">{formatTime(message.timestamp)}</span>
-                </div>
-                <div className="message-text">
-                  <ReactMarkdown>{message.content}</ReactMarkdown>
-                </div>
-              </div>
-            </div>
-          ))}
-          
-          {isTyping && (
-            <div className="message bot">
-              <div className="message-avatar">
-                <div className="bot-icon">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="1.5"/>
-                    <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="1.5"/>
-                    <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="1.5"/>
-                  </svg>
-                </div>
-              </div>
-              <div className="message-content">
-                <div className="message-header">
-                  <span className="message-sender">TEGBot</span>
-                </div>
-                <div className="typing-indicator">
-                  <span></span>
-                  <span></span>
-                  <span></span>
+                  <div className="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
                 </div>
               </div>
             </div>
